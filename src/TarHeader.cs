@@ -8,7 +8,7 @@ namespace SatorImaging.TarArchiver
     public class TarHeader
     {
         const int BLOCK_SIZE = 512;
-        internal static DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        static DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         enum EEntryType : byte
         {

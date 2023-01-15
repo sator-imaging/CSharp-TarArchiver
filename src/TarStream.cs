@@ -28,16 +28,14 @@ namespace SatorImaging.TarArchiver
         public void Close() => Dispose();
 
 
-        public void Write(string filename, string source) => Write(filename, source, DateTime.Now, null);
-        public void Write(string filename, string source, DateTime? modificationTime) => Write(filename, source, modificationTime, null);
-        public void Write(string filename, string source, DateTime? modificationTime, long? size)
+        public void Write(string filename, string source) => Write(filename, source, DateTime.Now);
+        public void Write(string filename, string source, DateTime modificationTime, long size = -1)
         {
             Write(filename, Encoding.UTF8.GetBytes(source), modificationTime, size);
         }
 
-        public void Write(string filename, byte[] source) => Write(filename, source, DateTime.Now, null);
-        public void Write(string filename, byte[] source, DateTime? modificationTime) => Write(filename, source, modificationTime, null);
-        public void Write(string filename, byte[] source, DateTime? modificationTime, long? size)
+        public void Write(string filename, byte[] source) => Write(filename, source, DateTime.Now);
+        public void Write(string filename, byte[] source, DateTime modificationTime, long size = -1)
         {
             using (var stream = new MemoryStream())
             {
@@ -48,26 +46,25 @@ namespace SatorImaging.TarArchiver
             }
         }
 
-        public void Write(string filename, Stream source) => Write(filename, source, DateTime.Now, null);
-        public void Write(string filename, Stream source, DateTime? modificationTime) => Write(filename, source, modificationTime, null);
-        public void Write(string filename, Stream source, DateTime? modificationTime, long? size)
+        public void Write(string filename, Stream source) => Write(filename, source, DateTime.Now);
+        public void Write(string filename, Stream source, DateTime modificationTime, long size = -1)
         {
-            if (!source.CanSeek && size is null)
+            if (!source.CanSeek && size < 0)
             {
                 throw new ArgumentException("Seekable stream is required if no size is given.");
             }
 
-            long realSize = size ?? source.Length;
+            long realSize = size < 0 ? source.Length : size;
 
             TarHeader header = new TarHeader();
 
-            header.LastModifiedTime = modificationTime ?? TarHeader.EPOCH;
+            header.LastModifiedTime = modificationTime;
             header.Name = NormalizeFilename(filename);
             header.Size = realSize;
             header.Write(m_outputStream);
 
             size = TransferTo(source, m_outputStream);
-            PadTo512(size.Value);
+            PadTo512(size);
         }
 
 

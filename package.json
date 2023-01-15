@@ -1,7 +1,7 @@
 {
   "name": "com.sator-imaging.tar-archiver",
   "displayName": "TAR Archiver for C# / .NET",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "unity": "2021.3",
   "description": "Minimal C# implementation for creating TAR (.tar) archive file.",
 

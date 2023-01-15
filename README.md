@@ -24,7 +24,7 @@ This library is built based on the codes from [SharpCompress](https://github.com
 - [Copyright](#copyright)
 - [License](#license)
     - [Third-Party Software Notices](#third-party-software-notices)
-- [Devnote](#devnote)
+- [Changelog](#changelog)
 
 </details>
 
@@ -168,13 +168,12 @@ THE SOFTWARE.
 
 
 
-&nbsp;  
-&nbsp;  
 
+# Changelog
 
-# Devnote
+- Nullables removed.
 
-Changelog:
+- Added rethrow code original one doesn't.
 
 - `stackalloc`: removed
 - `Span<T> = stackalloc T`: untouched
