@@ -20,6 +20,7 @@ This library is built based on the codes from [SharpCompress](https://github.com
 - [TAR Archiver for C# / .NET](#tar-archiver-for-c--net)
 - [Sample](#sample)
 - [Features](#features)
+- [Unity](#unity)
 - [Copyright](#copyright)
 - [License](#license)
     - [Third-Party Software Notices](#third-party-software-notices)
@@ -84,6 +85,18 @@ public class Sample
 - [ ] Appending/Removing files in existing TAR archive
 - [ ] Reading TAR archive contents
 - [ ] Extracting files from TAR archive
+
+
+
+# Unity
+
+Tested with Unity 2021.3.
+
+Use the following git URL to import this library using Unity Package Manager (UPM)
+
+- Lastest: `https://github.com/sator-imaging/CSharp-TarArchiver.git`
+- v1.0.0:  `https://github.com/sator-imaging/CSharp-TarArchiver.git#v1.0.0`
+
 
 
 # Copyright
