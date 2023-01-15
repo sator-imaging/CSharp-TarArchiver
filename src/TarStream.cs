@@ -113,6 +113,10 @@ namespace SatorImaging.TarArchiver
                 }
                 return total;
             }
+            catch
+            {
+                throw;
+            }
             finally
             {
                 //ArrayPool<byte>.Shared.Return(array);
