@@ -98,6 +98,10 @@ Use the following git URL to import this library using Unity Package Manager (UP
 - v1.0.0:  `https://github.com/sator-imaging/CSharp-TarArchiver.git#v1.0.0`
 
 
+Note that `src/Sample.cs` will add menu to Unity Editor that shows dialog for exporting test file.
+
+![](https://dl.dropbox.com/s/5qkzw1j4a0ony5a/CSharp-TarArchiver.png)
+
 
 # Copyright
 
