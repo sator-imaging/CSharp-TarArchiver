@@ -139,7 +139,7 @@ SOFTWARE.
 
 ## Third-Party Software Notices
 
-**SharpCompress**
+**SharpCompress**  
 https://github.com/adamhathcock/sharpcompress
 
 ```text
