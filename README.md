@@ -1,8 +1,7 @@
 TAR Archiver for C# / .NET
 ==========================
 
-Minimal C# implementation for creating TAR (.tar) archive file.
-
+Minimal C# implementation for creating TAR archive (.tar/.tar.gz/.tgz)
 
 This library is built based on the codes from [SharpCompress](https://github.com/adamhathcock/sharpcompress) library with:
 
@@ -12,22 +11,6 @@ This library is built based on the codes from [SharpCompress](https://github.com
 - `System.Buffers` Dependency Removal
 - Unity Ready without additional DLL Installation
 - Support for Unity Package Manager
-
-
-
-<details>
-<summary><small>Table of Contents</small></summary>
-
-- [TAR Archiver for C# / .NET](#tar-archiver-for-c--net)
-- [Sample](#sample)
-- [Features](#features)
-- [Unity](#unity)
-- [Copyright](#copyright)
-- [License](#license)
-    - [Third-Party Software Notices](#third-party-software-notices)
-- [Changelog](#changelog)
-
-</details>
 
 
 
@@ -79,39 +62,18 @@ public class Sample
 
 
 
-# Features
-
-- [x] Creating TAR archive from `string`, `byte[]` or `Stream`
-- [ ] Creating TAR archive from local files or directory structure
-- [ ] Appending/Removing files in existing TAR archive
-- [ ] Reading TAR archive contents
-- [ ] Extracting files from TAR archive
-
-
-
-# Unity
-
-Tested with Unity 2021.3.
-
-Use the following git URL to import this library using Unity Package Manager (UPM)
-
-- Lastest: `https://github.com/sator-imaging/CSharp-TarArchiver.git`
-- v1.0.0:  `https://github.com/sator-imaging/CSharp-TarArchiver.git#v1.0.0`
-
-
-Note that `src/Sample.cs` will add menu to Unity Editor that shows dialog for exporting test file.
-
-![](https://dl.dropbox.com/s/5qkzw1j4a0ony5a/CSharp-TarArchiver.png)
-
-
 # Copyright
 
 Copyright &copy; 2023 Sator Imaging, all rights reserved.
 
 
+
 # License
 
-This library is licensed under the MIT License.
+<p>
+<details>
+<summary>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</summary>
 
 ```text
 MIT License
@@ -137,11 +99,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+</details>
+</p>
+
+
 
 ## Third-Party Software Notices
 
 **SharpCompress**  
 https://github.com/adamhathcock/sharpcompress
+
+<p>
+<details>
 
 ```text
 The MIT License (MIT)
@@ -167,6 +136,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ```
 
+</details>
+</p>
+
+
+
+# Features
+
+- 🗹 Creating TAR archive from `string`, `byte[]` or `Stream`
+- ⊡ Creating TAR archive from local files or directory structure
+- ⊡ Appending/Removing files in existing TAR archive
+- ⊡ Reading TAR archive contents
+- ⊡ Extracting files from TAR archive
+
+
+
+# Unity
+
+Tested with Unity 2021.3.
+
+Use the following git URL to import this library using Unity Package Manager (UPM)
+
+- Lastest: `https://github.com/sator-imaging/CSharp-TarArchiver.git`
+- v1.0.0:  `https://github.com/sator-imaging/CSharp-TarArchiver.git#v1.0.0`
+
+
+Note that `src/Sample.cs` will add menu to Unity Editor that shows dialog for exporting test file.
+
+![](https://dl.dropbox.com/s/5qkzw1j4a0ony5a/CSharp-TarArchiver.png)
 
 
 
