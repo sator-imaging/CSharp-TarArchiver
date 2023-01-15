@@ -1,0 +1,14 @@
+{
+    "name": "SatorImaging.TarArchiver",
+    "rootNamespace": "SatorImaging.TarArchiver",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

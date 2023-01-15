@@ -1,0 +1,165 @@
+TAR Archiver for C# / .NET
+==========================
+
+Minimal C# implementation for creating TAR (.tar) archive file.
+
+
+This library is built based on the codes from [SharpCompress](https://github.com/adamhathcock/sharpcompress) library with:
+
+- `unsafe` Context Removal
+    - `Span<T> = stackalloc T` Remain Untouched &nbsp; <small>* Require C# 7.3 or Later</small>
+- `System.Buffers` Dependency Removal
+- Unity Ready without additional DLL Installation
+- Support for Unity Package Manager
+
+
+
+<details>
+<summary><small>Table of Contents</small></summary>
+
+- [TAR Archiver for C# / .NET](#tar-archiver-for-c--net)
+- [Sample](#sample)
+- [Features](#features)
+- [Copyright](#copyright)
+- [License](#license)
+    - [Third-Party Software Notices](#third-party-software-notices)
+- [Devnote](#devnote)
+
+</details>
+
+
+
+# Sample
+
+<details lang="ja">
+<summary><small>日本語</small></summary>
+
+`TarStream` を開いて string、byte[] または Stream を書き込むだけで tar アーカイブが作れます。`System.IO.Compression` と組み合わせて `.tar.gz`（`.tgz`）も作成できます。
+
+</details>
+
+
+Not complicated. The only feature is creating TAR archive from `string`, `byte[]` or `Stream` without any temporary file creation.
+
+Thanks to `System.IO.Compression` library, you can also create `.tar.gz` (`.tgz`) archive on the fly.
+
+
+
+```csharp
+using SatorImaging.TarArchiver;
+using System;
+using System.IO;
+using System.IO.Compression;
+
+public class Sample
+{
+    static void Main(string[] args)
+    {
+        if (args.Length == 0 || string.IsNullOrWhiteSpace(args[0]))
+            throw new ArgumentNullException(nameof(args));
+
+        // open TAR stream and export as a .tar.gz format
+        using (var targz = new FileStream(args[0], FileMode.Create, FileAccess.Write))
+        using (var gzip = new GZipStream(targz, CompressionLevel.Optimal))
+        using (var tar = new TarStream(gzip))
+        {
+            // writing data
+            tar.Write(@"path/to/the/file.txt", @"Hello, World.");
+            tar.Write(@"path/with/multibyte/文字列.txt", @"ひらがなカタカナ漢字");
+            tar.Write(@"yet-another-folder/byteArray.txt", new byte[] { 84, 65, 82, 13, 10 });  //TAR[CR][LF]
+            tar.Write(@"root.txt", "");
+            tar.Flush();  // done in TarStream.Dispose() anyway
+        }
+
+    }
+}
+```
+
+
+
+# Features
+
+- [x] Creating TAR archive from `string`, `byte[]` or `Stream`
+- [ ] Creating TAR archive from local files or directory structure
+- [ ] Appending/Removing files in existing TAR archive
+- [ ] Reading TAR archive contents
+- [ ] Extracting files from TAR archive
+
+
+# Copyright
+
+Copyright &copy; 2023 Sator Imaging, all rights reserved.
+
+
+# License
+
+This library is licensed under the MIT License.
+
+```text
+MIT License
+
+Copyright (c) 2023 Sator Imaging
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+
+## Third-Party Software Notices
+
+**SharpCompress**
+https://github.com/adamhathcock/sharpcompress
+
+```text
+The MIT License (MIT)
+
+Copyright (c) 2014  Adam Hathcock
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+```
+
+
+
+&nbsp;  
+&nbsp;  
+
+
+# Devnote
+
+Changelog:
+
+- `stackalloc`: removed
+- `Span<T> = stackalloc T`: untouched
+- `ArrayPool<Byte>`: removed
+- `BinaryPrimitives.WriteInt64BigEndian`: polyfilled
