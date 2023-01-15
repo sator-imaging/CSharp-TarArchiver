@@ -8,6 +8,7 @@ This library is built based on the codes from [SharpCompress](https://github.com
 
 - `unsafe` Context Removal
     - `Span<T> = stackalloc T` Remain Untouched &nbsp; <small>* Require C# 7.3 or Later</small>
+- Nullables Removal
 - `System.Buffers` Dependency Removal
 - Unity Ready without additional DLL Installation
 - Support for Unity Package Manager
