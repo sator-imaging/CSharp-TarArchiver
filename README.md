@@ -143,11 +143,11 @@ THE SOFTWARE.
 
 # Features
 
-- 🗹 Creating TAR archive from `string`, `byte[]` or `Stream`
-- ⊡ Creating TAR archive from local files or directory structure
-- ⊡ Appending/Removing files in existing TAR archive
-- ⊡ Reading TAR archive contents
-- ⊡ Extracting files from TAR archive
+- ✅ Creating TAR archive from `string`, `byte[]` or `Stream`
+- ⬜️ Creating TAR archive from local files or directory structure
+- ⬜️ Appending/Removing files in existing TAR archive
+- ⬜️ Reading TAR archive contents
+- ⬜️ Extracting files from TAR archive
 
 
 
