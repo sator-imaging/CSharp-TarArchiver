@@ -1,0 +1,30 @@
+name: ReleaseNoUnityFiles
+
+env:
+  SRC: unity
+  DST: main
+
+on:
+  release:
+    branches:
+    - ${{ env.SRC }}
+  workflow_dispatch:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Git
+      run: |
+        git config user.name  'github-actions[bot]'
+        git config user.email 'github-actions[bot]@users.noreply.github.com'
+        git fetch origin ${{ env.DST }}
+        git checkout ${{ env.DST }}
+        git pull -ff origin ${{ env.SRC }}:${{ env.DST }}
+        git add --all
+        git rm -f --ignore-unmatch \*.meta
+        git rm -f --ignore-unmatch \*.asmdef
+        git rm -f --ignore-unmatch \*.asmref
+        git commit -m "[bot] ReleaseNoUnityFiles"
+        git push origin
