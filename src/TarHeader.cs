@@ -2,13 +2,15 @@ using System;
 using System.IO;
 using System.Text;
 
+#nullable enable
 
 namespace SatorImaging.TarArchiver
 {
     public class TarHeader
     {
         const int BLOCK_SIZE = 512;
-        static DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        static readonly DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        static readonly Encoding ArchiveEncoding = Encoding.UTF8;
 
         enum EEntryType : byte
         {
@@ -27,9 +29,6 @@ namespace SatorImaging.TarArchiver
             GlobalExtendedHeader = (byte)'g'
         }
 
-        EEntryType EntryType;
-        Encoding ArchiveEncoding = Encoding.UTF8;
-
 
         internal string Name { get; set; }
         internal long Size { get; set; }
@@ -38,7 +37,7 @@ namespace SatorImaging.TarArchiver
 
         internal void Write(Stream output)
         {
-            byte[] buffer = new byte[BLOCK_SIZE];
+            byte[] buffer = stackalloc byte[BLOCK_SIZE];
 
             WriteOctalBytes(511, buffer, 100, 8); // file mode
             WriteOctalBytes(0, buffer, 108, 8); // owner ID
@@ -59,7 +58,7 @@ namespace SatorImaging.TarArchiver
                 WriteOctalBytes(Size, buffer, 124, 12);
                 var time = (long)(LastModifiedTime.ToUniversalTime() - EPOCH).TotalSeconds;
                 WriteOctalBytes(time, buffer, 136, 12);
-                buffer[156] = (byte)EntryType;
+                buffer[156] = (byte)(default(EEntryType));
 
                 if (Size >= 0x1FFFFFFFF)
                 {
@@ -91,9 +90,7 @@ namespace SatorImaging.TarArchiver
         }
 
 
-
         #region ////////  Utility  ////////
-
 
         static void BinaryPrimitives_WriteInt64BigEndian(Span<byte> destination, long value)
         {
@@ -155,7 +152,7 @@ namespace SatorImaging.TarArchiver
             {
                 numPaddingBytes = BLOCK_SIZE;
             }
-            output.Write(new byte[numPaddingBytes]);
+            output.Write(stackalloc byte[numPaddingBytes]);
         }
 
 
@@ -185,10 +182,6 @@ namespace SatorImaging.TarArchiver
             return headerChecksum;
         }
 
-
         #endregion
-
-
-
     }
 }
