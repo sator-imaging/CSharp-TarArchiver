@@ -1,16 +1,15 @@
-TAR Archiver for C# / .NET
-==========================
+TAR Archiver for .NET / Unity
+=============================
 
-Minimal C# implementation for creating TAR archive (.tar/.tar.gz/.tgz)
+Minimal C# implementation for creating TAR archive. (.tar/.tar.gz/.tgz)
 
 This library is built based on the codes from [SharpCompress](https://github.com/adamhathcock/sharpcompress) library with:
 
 - `unsafe` Context Removal
     - `Span<T> = stackalloc T` Remain Untouched &nbsp; <small>* Require C# 7.3 or Later</small>
-- Nullables Removal
-- `System.Buffers` Dependency Removal
 - Unity Ready without additional DLL Installation
 - Support for Unity Package Manager
+- Unity 2021 LTS or Later
 
 
 
@@ -27,7 +26,6 @@ This library is built based on the codes from [SharpCompress](https://github.com
 Not complicated. The only feature is creating TAR archive from `string`, `byte[]` or `Stream` without any temporary file creation.
 
 Thanks to `System.IO.Compression` library, you can also create `.tar.gz` (`.tgz`) archive on the fly.
-
 
 
 ```csharp
@@ -56,6 +54,9 @@ public class Sample
             tar.Flush();  // done in TarStream.Dispose() anyway
         }
 
+        // NOTE: To use MemoryStream instead of FileStream for underlying base stream
+        //       of GZipStream, it must be CLOSED before calling MemoryStream.ToArray().
+        //       GZipStream.Flush() won't write anything, close it first.
     }
 }
 ```
@@ -161,19 +162,6 @@ Use the following git URL to import this library using Unity Package Manager (UP
 - v1.0.0:  `https://github.com/sator-imaging/CSharp-TarArchiver.git#v1.0.0`
 
 
-Note that `src/Sample.cs` will add menu to Unity Editor that shows dialog for exporting test file.
+Note that `src/Tests.cs` will add menu to Unity Editor that shows dialog for exporting test file.
 
 ![](https://dl.dropbox.com/s/5qkzw1j4a0ony5a/CSharp-TarArchiver.png)
-
-
-
-# Changelog
-
-- Nullables removed.
-
-- Added rethrow code original one doesn't.
-
-- `stackalloc`: removed
-- `Span<T> = stackalloc T`: untouched
-- `ArrayPool<Byte>`: removed
-- `BinaryPrimitives.WriteInt64BigEndian`: polyfilled

@@ -2,13 +2,15 @@ using System;
 using System.IO;
 using System.Text;
 
+#nullable enable
 
 namespace SatorImaging.TarArchiver
 {
     public class TarHeader
     {
         const int BLOCK_SIZE = 512;
-        static DateTime EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        static readonly DateTime EPOCH = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        static readonly Encoding ArchiveEncoding = Encoding.UTF8;
 
         enum EEntryType : byte
         {
@@ -27,18 +29,15 @@ namespace SatorImaging.TarArchiver
             GlobalExtendedHeader = (byte)'g'
         }
 
-        EEntryType EntryType;
-        Encoding ArchiveEncoding = Encoding.UTF8;
 
-
-        internal string Name { get; set; }
+        internal string Name { get; set; } = string.Empty;
         internal long Size { get; set; }
         internal DateTime LastModifiedTime { get; set; }
 
 
         internal void Write(Stream output)
         {
-            byte[] buffer = new byte[BLOCK_SIZE];
+            var buffer = (stackalloc byte[BLOCK_SIZE]);
 
             WriteOctalBytes(511, buffer, 100, 8); // file mode
             WriteOctalBytes(0, buffer, 108, 8); // owner ID
@@ -59,21 +58,21 @@ namespace SatorImaging.TarArchiver
                 WriteOctalBytes(Size, buffer, 124, 12);
                 var time = (long)(LastModifiedTime.ToUniversalTime() - EPOCH).TotalSeconds;
                 WriteOctalBytes(time, buffer, 136, 12);
-                buffer[156] = (byte)EntryType;
+                buffer[156] = (byte)(default(EEntryType));
 
                 if (Size >= 0x1FFFFFFFF)
                 {
                     Span<byte> bytes12 = stackalloc byte[12];
                     BinaryPrimitives_WriteInt64BigEndian(bytes12.Slice(4), Size);
                     bytes12[0] |= 0x80;
-                    bytes12.CopyTo(buffer.AsSpan(124));
+                    bytes12.CopyTo(buffer.Slice(124));
                 }
             }
 
             int crc = RecalculateChecksum(buffer);
             WriteOctalBytes(crc, buffer, 148, 8);
 
-            output.Write(buffer, 0, buffer.Length);
+            output.Write(buffer);
 
             if (nameByteCount > 100)
             {
@@ -91,9 +90,7 @@ namespace SatorImaging.TarArchiver
         }
 
 
-
         #region ////////  Utility  ////////
-
 
         static void BinaryPrimitives_WriteInt64BigEndian(Span<byte> destination, long value)
         {
@@ -106,7 +103,7 @@ namespace SatorImaging.TarArchiver
         }
 
 
-        static void WriteOctalBytes(long value, byte[] buffer, int offset, int length)
+        static void WriteOctalBytes(long value, Span<byte> buffer, int offset, int length)
         {
             var val = Convert.ToString(value, 8);
             var shift = length - val.Length - 1;
@@ -128,7 +125,7 @@ namespace SatorImaging.TarArchiver
             buffer.Slice(i, length - i).Clear();
         }
 
-        static void WriteStringBytes(string name, byte[] buffer, int offset, int length)
+        static void WriteStringBytes(string name, Span<byte> buffer, int offset, int length)
         {
             int i;
 
@@ -155,7 +152,7 @@ namespace SatorImaging.TarArchiver
             {
                 numPaddingBytes = BLOCK_SIZE;
             }
-            output.Write(new byte[numPaddingBytes]);
+            output.Write(stackalloc byte[numPaddingBytes]);
         }
 
 
@@ -171,10 +168,10 @@ namespace SatorImaging.TarArchiver
                 (byte)' ',
             };
 
-        static int RecalculateChecksum(byte[] buf)
+        static int RecalculateChecksum(Span<byte> buf)
         {
             // Set default value for checksum. That is 8 spaces.
-            eightSpaces.CopyTo(buf, 148);
+            eightSpaces.CopyTo(buf.Slice(148));
 
             // Calculate checksum
             var headerChecksum = 0;
@@ -185,10 +182,6 @@ namespace SatorImaging.TarArchiver
             return headerChecksum;
         }
 
-
         #endregion
-
-
-
     }
 }
