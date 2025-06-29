@@ -1,13 +1,15 @@
 using System;
+using System.Buffers;
 using System.IO;
 using System.Text;
 
+#nullable enable
 
 namespace SatorImaging.TarArchiver
 {
     public class TarStream : IDisposable
     {
-        Stream m_outputStream;
+        readonly Stream m_outputStream;
 
         public TarStream(Stream output)
         {
@@ -17,7 +19,7 @@ namespace SatorImaging.TarArchiver
         public void Dispose()
         {
             /// Indicates if archive should be finalized (by 2 empty blocks) on close.
-            m_outputStream.Write(new byte[1024]);
+            m_outputStream.Write(stackalloc byte[1024]);
             m_outputStream.Flush();
             // parent stream keep open for further op
             //m_outputStream.Close();
@@ -37,11 +39,11 @@ namespace SatorImaging.TarArchiver
         public void Write(string filename, byte[] source) => Write(filename, source, DateTime.Now);
         public void Write(string filename, byte[] source, DateTime modificationTime, long size = -1)
         {
-            using (var stream = new MemoryStream())
+            using (var stream = new MemoryStream(source))
             {
-                stream.Write(source);
-                stream.Flush();
-                stream.Position = 0;
+                //stream.Write(source);
+                //stream.Flush();
+                //stream.Position = 0;
                 Write(filename, stream, modificationTime, size);
             }
         }
@@ -56,7 +58,7 @@ namespace SatorImaging.TarArchiver
 
             long realSize = size < 0 ? source.Length : size;
 
-            TarHeader header = new TarHeader();
+            TarHeader header = new();
 
             header.LastModifiedTime = modificationTime;
             header.Name = NormalizeFilename(filename);
@@ -68,17 +70,15 @@ namespace SatorImaging.TarArchiver
         }
 
 
-
         #region ////////  Utility  ////////
-
 
         void PadTo512(long size)
         {
             int zeros = unchecked((int)(((size + 511L) & ~511L) - size));
-            m_outputStream.Write(new byte[zeros]);
+            m_outputStream.Write(stackalloc byte[zeros]);
         }
 
-        string NormalizeFilename(string filename)
+        static string NormalizeFilename(string filename)
         {
             filename = filename.Replace('\\', '/');
 
@@ -92,21 +92,19 @@ namespace SatorImaging.TarArchiver
         }
 
 
-        static byte[] GetTransferByteArray() => new byte[81920]; //ArrayPool<byte>.Shared.Rent(81920);
-
         static bool ReadTransferBlock(Stream source, byte[] array, out int count) =>
             (count = source.Read(array, 0, array.Length)) != 0;
 
         static long TransferTo(/*this*/ Stream source, Stream destination)
         {
-            var array = GetTransferByteArray();
+            var rental_array = ArrayPool<byte>.Shared.Rent(8192);
             try
             {
                 long total = 0;
-                while (ReadTransferBlock(source, array, out var count))
+                while (ReadTransferBlock(source, rental_array, out var count))
                 {
                     total += count;
-                    destination.Write(array, 0, count);
+                    destination.Write(rental_array, 0, count);
                 }
                 return total;
             }
@@ -116,13 +114,10 @@ namespace SatorImaging.TarArchiver
             }
             finally
             {
-                //ArrayPool<byte>.Shared.Return(array);
+                ArrayPool<byte>.Shared.Return(rental_array);
             }
         }
 
-
         #endregion
-
-
     }
 }
