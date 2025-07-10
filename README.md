@@ -67,7 +67,7 @@ public class Sample
 Add the following git URL to Unity Package Manager (UPM)
 
 - Lastest: `https://github.com/sator-imaging/CSharp-TarArchiver.git`
-- v2.0.0:  `https://github.com/sator-imaging/CSharp-TarArchiver.git#v2.0.0`
+- v2.0.1:  `https://github.com/sator-imaging/CSharp-TarArchiver.git#v2.0.1`
 
 
 Note that `src/Tests.cs` will add menu to Unity Editor that shows dialog for exporting test file.
