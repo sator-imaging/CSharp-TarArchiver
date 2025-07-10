@@ -6,12 +6,14 @@ using System.Text;
 
 namespace SatorImaging.TarArchiver
 {
-    public class TarHeader
+    internal class TarHeader
     {
         const int BLOCK_SIZE = 512;
         static readonly DateTime EPOCH = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         static readonly Encoding ArchiveEncoding = Encoding.UTF8;
 
+#pragma warning disable SMA0026 // Enum Obfuscation
+#pragma warning disable SMA0027 // Unusual Enum Definition
         enum EEntryType : byte
         {
             File = 0,
@@ -28,6 +30,8 @@ namespace SatorImaging.TarArchiver
             VolumeHeader = (byte)'V',
             GlobalExtendedHeader = (byte)'g'
         }
+#pragma warning restore SMA0027 // Unusual Enum Definition
+#pragma warning restore SMA0026 // Enum Obfuscation
 
 
         internal string Name { get; set; } = string.Empty;
