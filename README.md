@@ -3,10 +3,9 @@ TAR Archiver for .NET / Unity
 
 Minimal C# implementation for creating TAR archive. (.tar/.tar.gz/.tgz)
 
-This library is built based on the codes from [SharpCompress](https://github.com/adamhathcock/sharpcompress) library with:
+This library was built based on the codebase from [SharpCompress](https://github.com/adamhathcock/sharpcompress) library with:
 
 - `unsafe` Context Removal
-    - `Span<T> = stackalloc T` Remain Untouched &nbsp; <small>* Require C# 7.3 or Later</small>
 - Unity Ready without additional DLL Installation
 - Support for Unity Package Manager
 - Unity 2021 LTS or Later
